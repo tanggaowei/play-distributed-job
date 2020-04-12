@@ -1,0 +1,13 @@
+# Application dependencies
+
+require:
+    - play
+    - org.redisson -> redisson 3.12.4
+repositories:
+    - mavenCentral:
+          type: iBiblio
+          root: "https://maven.aliyun.com/repository/central"
+          contains:
+              - com -> *
+              - org -> *
+              - play -> *
