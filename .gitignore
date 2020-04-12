@@ -1,0 +1,13 @@
+/tmp
+/test-result
+/*.iws
+/*.iml
+/*.ipr
+/upload
+/modules
+/logs
+/nohup.out
+/precompiled
+/server.pid
+/public/temp
+/lib/*
