@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 分布式任务
+ *
  * @author tanggaowei
  */
 public abstract class DistributedJob extends Job {
@@ -27,19 +28,23 @@ public abstract class DistributedJob extends Job {
     protected abstract int getTimeout();
 
     @Override
-    public void doJob() throws InterruptedException{
-        RLock lock = redisson.getLock(lockKey());
-        boolean res = lock.tryLock(WAIT_TIME, getTimeout(), TimeUnit.SECONDS);
-
-        if (!res) {
-            Logger.info("lock fail: %s %d", getClass().getSimpleName(), Thread.currentThread().getId());
-            return;
-        }
-
+    public void doJob() throws InterruptedException {
         try {
-            todo();
-        } finally {
-            lock.unlock();
+            RLock lock = redisson.getLock(lockKey());
+            boolean res = lock.tryLock(WAIT_TIME, getTimeout(), TimeUnit.SECONDS);
+
+            if (!res) {
+                Logger.info("lock fail: %s %d", getClass().getSimpleName(), Thread.currentThread().getId());
+                return;
+            }
+
+            try {
+                todo();
+            } finally {
+                lock.unlock();
+            }
+        } catch (Exception e) {
+            Logger.error(e, "play job run fail.");
         }
     }
 
