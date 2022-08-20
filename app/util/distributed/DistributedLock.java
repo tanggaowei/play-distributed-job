@@ -13,6 +13,16 @@ public class DistributedLock {
     private static RedissonClient redisson = RedissonManager.getRedisson();
     private static final String LOCK_TITLE = "play:redisson:lock:";
 
+    public static boolean tryLock(String lockName, int timeout) {
+        try {
+            String key = LOCK_TITLE + lockName;
+            RLock lock = redisson.getLock(key);
+            return lock.tryLock(1, timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
     public static void lock(String lockName, int timeout) {
         String key = LOCK_TITLE + lockName;
         RLock rLock = redisson.getLock(key);

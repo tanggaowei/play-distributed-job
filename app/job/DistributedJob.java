@@ -28,7 +28,7 @@ public abstract class DistributedJob extends Job {
     protected abstract int getTimeout();
 
     @Override
-    public void doJob() throws InterruptedException {
+    public void doJob() {
         try {
             RLock lock = redisson.getLock(lockKey());
             boolean res = lock.tryLock(WAIT_TIME, getTimeout(), TimeUnit.SECONDS);
